@@ -4,7 +4,7 @@
 [ ! "$(which jq)" ] && echo "Please install jq!" && exit 1
 
 # assign menu prorgram
-menu="dmenu -i -l 15 -fn SFMono-Regular -nb #2b303c -sb #3b4252" # uncomment line to use dmenu
+menu="dmenu -i -l 15" # uncomment line to use dmenu
 
 #menu="rofi -dmenu -i" # uncomment line to use rofi
 
