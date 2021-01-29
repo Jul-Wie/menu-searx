@@ -1,0 +1,63 @@
+#!/bin/sh
+
+# check if necessary programs are installed
+[ ! "$(which jq)" ] && echo "Please install jq!" && exit 1
+
+# assign menu prorgram
+menu="dmenu -i -l 15 -fn SFMono-Regular -nb #2b303c -sb #3b4252" # uncomment line to use dmenu
+
+#menu="rofi -dmenu -i" # uncomment line to use rofi
+
+# if notify-send is not installed, use echo as notifier for errors
+notifier="echo"
+
+# searx instance you will be getting the results from
+instance="searx.prvcy.eu"
+
+# browser
+browser=surf
+
+# search term
+query="$(echo | $menu -p  "Search")"
+
+# check opens link in browser
+if [ -z "$query" ]; then
+	echo "invalid search"
+        $notifier "Invalid search"
+	exit 1
+fi
+
+# sanatise query
+query=$(sed \
+	-e 's|+|%2B|g'\
+	-e 's|#|%23|g'\
+	-e 's|&|%26|g'\
+	-e 's| |+|g'\
+	<<< "$query")
+
+# where any temporary files will be stored
+cachedir="/tmp/menusearx"
+
+# if cachedir does not exist, create it
+if [ ! -d "$cachedir" ]; then
+	        echo "$cachedir does not exist, creating..."
+		        mkdir -p "$cachedir"
+fi
+
+# gets results json
+curl -o $cachedir"/results.json" -s "https://"$instance"/search?q="$query"&format=json"
+
+# gets individual urls
+jq '.' < $cachedir"/results.json" | grep '"url":' | grep -Eo "http(s|)://.*" | sed -e 's|[",]||g' > $cachedir"/links.txt"
+
+# prompts user to select link
+url="$($menu -p "Select" < $cachedir"/links.txt")"
+
+# check if the url is invalid, and if not,  opens link in browser
+if [ -z $url ]; then
+	$notifier "Invalid URL"
+else
+	$browser $url
+fi
+
+rm "${cachedir:?}"/*
