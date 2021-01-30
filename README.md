@@ -4,6 +4,7 @@ A simple program to search the [searx](https://searx.me/) web browser through [d
 
 # Prerequisites
 The program requires [jq](https://stedolan.github.io/jq/), a JSON processor, to work.
+The program requires either dmenu or rofi to work.
 
 # Installation
 If you wish to receive error notifications at anywhere but the terminal, see `Notifier` under `Config` on how to set a notification program.  
