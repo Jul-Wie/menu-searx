@@ -12,7 +12,7 @@ menu="dmenu -i -l 15" # uncomment line to use dmenu
 notifier="echo"
 
 # searx instance you will be getting the results from
-instance="searx.prvcy.eu"
+instance=""
 
 # browser
 browser=surf
