@@ -1,5 +1,5 @@
 # Menu Searx
-A simple program to search the [searx](https://searx.me/) web browser through [dmenu](https://tools.suckless.org/dmenu/) or [rofi](https://github.com/davatorium/rofi), sort through the results and open the selected URL in you prefered web browser. Works with almost any Searx instance and you can change which one to use easily.  
+A simple program to search the [searx](https://searx.me/) search engine through [dmenu](https://tools.suckless.org/dmenu/) or [rofi](https://github.com/davatorium/rofi), sort through the results and open the selected URL in you prefered web browser. Works with almost any Searx instance and you can change which one to use easily.  
 ![Demo](images/demo.GIF)
 
 # Prerequisites
