@@ -11,7 +11,7 @@ menu="dmenu -i -l 15" # uncomment line to use dmenu
 notifier="notify-send"
 
 # searx instance you will be getting the results from
-instance="https://search.stinpriza.org/"
+instance=""
 
 # checks if instance is empty
 if [ -z $instance ]; then
