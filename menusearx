@@ -5,14 +5,19 @@
 
 # assign menu prorgram
 menu="dmenu -i -l 15" # uncomment line to use dmenu
-
 #menu="rofi -dmenu -i" # uncomment line to use rofi
 
 # if notify-send is not installed, use echo as notifier for errors
-notifier="echo"
+notifier="notify-send"
 
 # searx instance you will be getting the results from
 instance=""
+
+# checks if instance is empty
+if [ -z $instance ]; then
+	$notifier "Empty instance"
+	exit 1
+fi
 
 # browser
 browser=surf
@@ -20,10 +25,9 @@ browser=surf
 # search term
 query="$(echo | $menu -p  "Search")"
 
-# check opens link in browser
-if [ -z "$query" ]; then
-	echo "invalid search"
-        $notifier "Invalid search"
+# check if query is empty
+if [ -z $query ]; then
+        $notifier "Empty query"
 	exit 1
 fi
 
@@ -40,18 +44,26 @@ cachedir="/tmp/menusearx"
 
 # if cachedir does not exist, create it
 if [ ! -d "$cachedir" ]; then
-	        echo "$cachedir does not exist, creating..."
-		        mkdir -p "$cachedir"
+	echo "$cachedir does not exist, creating..."
+	mkdir -p "$cachedir"
 fi
 
 # gets results json
-curl -o $cachedir"/results.json" -s "https://"$instance"/search?q="$query"&format=json"
+curl -o $cachedir"results.json" -s $instance"/search?q="$query"&format=json"
+
+if grep -q "Rate limit exceeded" $cachedir"results.json"; then
+	$notifier "Instance rate limit exceeded"
+	exit 1
+elif grep -q "Blocked" $cachedir"results.json"; then
+        $notifier "Instance blocked program"
+	exit 1
+fi
 
 # gets individual urls
-jq '.' < $cachedir"/results.json" | grep '"url":' | grep -Eo "http(s|)://.*" | sed -e 's|[",]||g' > $cachedir"/links.txt"
+jq '.' < $cachedir"results.json" | grep '"url":' | grep -Eo "http(s|)://.*" | sed -e 's|[",]||g' > $cachedir"links.txt"
 
 # prompts user to select link
-url="$($menu -p "Select" < $cachedir"/links.txt")"
+url="$($menu -p "Select" < $cachedir"links.txt")"
 
 # check if the url is invalid, and if not,  opens link in browser
 if [ -z $url ]; then
