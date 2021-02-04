@@ -16,10 +16,10 @@ The entire script exists within `menusearx`, open it up to start configuring thi
 
 ## Menu Program
 Uncomment the line under `# assign menu prorgram` relating to your preferred menu application, or add your own.  
-If you wish to change the colour of your menu program, that can be accomplished by appending whatever flags are needed to the `menu` variable.
+If you wish to change the colour of your menu program, that can be accomplished by inserting whatever flags are needed to the  `menu` variable, just before the `-p` tag.
 
 ## Notifier
-To receive error notifcations at the desktop, as is highly reccomended, you can change the `notifier` variable to the notification program. In many cases, it is `notify-send` that is used.
+The default program for sending important notifications is `notify-send` you can change this by changing the `notifier` variable.
 
 ## Searx Instance
 You can set a Searx instance by changing the `instance` variable to the instance's domain name.
@@ -28,16 +28,20 @@ You can set a Searx instance by changing the `instance` variable to the instance
 You can set a Searx instance by changing the `browser` variable to the instance's domain name.
 
 ## Temporary Files Directory
-If you do not wish to have temporary files be stored under `/tmp/menusearx`, you can change this directory by changing the `cachedir` variable to the desired directory.  
+If you do not wish to have temporary files be stored under `/tmp/menusearx`, you can change this directory by changing the `cachedir` variable to the desired directory.
+
+## Search Cache
+By default, the program with save the results of the last 10 searches you have made. If it finds that you have the results for a search already saved, it reads from those results rather than fetching them again. You may edit the number of searches save by changing the `cachenum` variable.
 
 # Instance Report
 Many large public instances will have systems in place that will block the program. If you host your own instance, you should have no problem using that, otherwise, here are some suggestions of large instances. (This is not an endorsement, just a list of compatible instances)
 
 Confirmed working public instances:
+
+* https://search.mdosch.de/
 * https://searx.bbaovanc.com/
 * https://search.stinpriza.org/
 * https://searx.decatec.de/
-* https://search.mdosch.de/
 * https://dynabyte.ca/
 * https://zoek.anchel.nl/
 * https://searx.rasp.fr/
