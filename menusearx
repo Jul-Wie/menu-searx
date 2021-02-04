@@ -11,7 +11,7 @@ menu='dmenu -i -l 15 -p'
 notifier='notify-send'
 
 # searx instance you will be getting the results from
-instance=''
+instance=
 #:r !grep '\* https://' README.md | sed 's/^\s*\*\s*/\#instance=/'
 #:<grep '\* https://' README.md | sed 's/^\s*\*\s*/\#instance=/'
 
