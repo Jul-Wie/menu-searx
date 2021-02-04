@@ -51,20 +51,26 @@ cachedir=${XDG_CACHE_HOME:-/tmp/menusearx}
 	mkdir -p "$cachedir"
 }
 
-# gets results json
-curl -o "$cachedir/results.json" -s "$instance/search?q=$query&format=json"
+if [ ! -f "$cachedir/$query.txt" ]; then
+	echo "$cachedir/$query.txt not in cache, fetching results..."
+	
+	# gets results json
+	curl -o "$cachedir/results.json" -s "$instance/search?q=$query&format=json"
 
-if grep -qF 'Rate limit exceeded' "$cachedir/results.json"; then
-	$notifier 'Instance rate limit exceeded'
-	exit 1
-elif grep -qF 'Blocked' "$cachedir/results.json"; then
-        $notifier 'Instance blocked program'
-	exit 1
+	if grep -qF 'Rate limit exceeded' "$cachedir/results.json"; then
+		$notifier 'Instance rate limit exceeded'
+		exit 1
+	elif grep -qF 'Blocked' "$cachedir/results.json"; then
+		$notifier 'Instance blocked program'
+		exit 1
+	fi
+
+	# gets individual titles and urls
+	jq -r '.results[] | [.title, .url] | join("@")' "$cachedir/results.json" |
+	column -t -s '@' >"$cachedir/$query.txt"	
+else
+	echo "$cachedir/$query.txt already in cache, using saved results..."
 fi
-
-# gets individual titles and urls
-jq -r '.results[] | [.title, .url] | join("@")' "$cachedir/results.json" |
-column -t -s '@' >"$cachedir/$query.txt"
 
 # prompts user to select result, open in browser if non-empty
 if url=$($menu 'Select' <"$cachedir/$query.txt" | grep -o 'https://.*'); then
