@@ -4,8 +4,8 @@
 command -v jq >/dev/null || { echo 'Please install jq!'; exit 1; }
 
 # assign menu prorgram
-menu='dmenu -i -l 15'
-#menu='rofi -dmenu -i'
+menu='dmenu -i -l 15 -p'
+#menu='rofi -dmenu -i -p'
 
 # if notify-send is not installed, use echo as notifier for errors
 notifier='notify-send'
@@ -24,8 +24,11 @@ fi
 # browser
 browser=${BROWSER:-surf}
 
+# how many search results to cache
+cachenum=10
+
 # search term, exit with error if query is empty
-query=$($menu -p 'Search' <&-) || {
+query=$($menu 'Search' <&-) || {
 	$notifier 'Empty query'
 	exit 1
 }
@@ -61,14 +64,17 @@ fi
 
 # gets individual titles and urls
 jq -r '.results[] | [.title, .url] | join("@")' "$cachedir/results.json" |
-column -t -s '@' >"$cachedir/links.txt"
+column -t -s '@' >"$cachedir/$query.txt"
 
 # prompts user to select result, open in browser if non-empty
-if url=$($menu -p 'Select' <"$cachedir/links.txt" | grep -o 'https://.*'); then
+if url=$($menu 'Select' <"$cachedir/$query.txt" | grep -o 'https://.*'); then
 	$browser "$url"
 else
 	$notifier 'Invalid URL'
 fi
 
-rm "${cachedir:?}"/*
+rm "$cachedir/results.json"
 
+if [ $(ls "$cachedir" | wc -l) -ge $cachenum ]; then
+	rm "$cachedir/$(ls -1t "$cachedir" | tail -1)"
+fi
