@@ -1,6 +1,6 @@
 Simplified version of Menu Searx that opens searx.instance/search?q=$query directly, for those who prefer to use the search engine's site itself.
 
-# Menu Searx
+# Simple Menu Searx
 A simple program to search the [searx](https://searx.me/) search engine through [dmenu](https://tools.suckless.org/dmenu/) or [rofi](https://github.com/davatorium/rofi). Works with almost any Searx instance and you can change which one to use easily.  
 # Prerequisites
 The program requires xdotool to work. This programs allows the script to type into the search bar and use hotkeys to open it.  
